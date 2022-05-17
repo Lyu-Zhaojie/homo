@@ -1,0 +1,101 @@
+<!DOCTYPE html
+    PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+    <meta charset="utf-8">
+    <title>走向数字论证的机械化！</title>
+    <style>
+        html {
+            text-align: center;
+            background: #e3e8ec;
+            color: #777777;
+            transition: 1s ease;
+            font-family: sans-serif;
+            word-break: break-all;
+        }
+
+        input {
+            outline: 0;
+            font-size: 20px;
+            line-height: 26px;
+            text-align: center;
+
+            padding: 8px 12px;
+            border: 0;
+            width: 80%;
+            max-width: 300px;
+        }
+
+        #inBox {
+            /* padding: 40px, 10px, 100px; */
+            width: 75%;
+            text-align: center;
+            font-size: 20px;
+            margin: 20px auto;
+        }
+    </style>
+</head>
+
+<body>
+    <h1>数字论证器</h1>
+    <h2>走向数字论证的机械化！</h2>
+    <input id="inputBox" oninput="homo()" placeholder="输入一个整数" />
+    <div id="inBox" />
+    <script>
+        var raw_data = [
+            "(11/(45-1)*4)",
+            "(-11+4-5+14)",
+            "(-11-4+5+14)",
+            "(11-4-5+14)",
+            "((114-51)*4+(-11-4+5+14))",
+            "(114*514+(11*45*14+(-11/4+51/4)))",
+            "(114514*(114*51*4+(11451+4+(114*(5+1)*4+(114-51-4))))+(11*(451+4)+(-1+1*4*51+4)))" // 2^32=4294967296
+        ];
+        function homoBinary(exp) {
+            if (exp === 0)
+                return raw_data[0];
+            var str = exp.toString(2);
+            var flag = false;
+            var ans = "";
+            for (var i = str.length - 1; i >= 0; i--) {
+                if (str[i] === '1') {
+                    if (flag)
+                        ans += '*';
+                    flag = true;
+                    ans += raw_data[str.length - i];
+                }
+            }
+            return ans;
+        }
+        function homoNum(num) {
+            if (num === 0)
+                return "(1-1)*4514";
+            if (num < 0)
+                return "(11-4-5+1-4)*" + homoNum(-num);
+            var str = num.toString(2);
+            var flag = false;
+            var ans = "";
+            for (var i = str.length - 1; i >= 0; i--) {
+                if (str[i] === '1') {
+                    if (flag)
+                        ans += '+';
+                    flag = true;
+                    ans += homoBinary(str.length - 1 - i);
+                }
+            }
+            return ans;
+        }
+        function homo() {
+            var num = inputBox.value.trim();
+            var rule = new RegExp("-?[1-9][0-9]*");
+            if (!rule.test(num) && num != '')
+                inBox.innerHTML = "太差太差的" + num + "有论证的必要吗";
+            else
+                inBox.innerHTML = num + "=" + homoNum(parseInt(num, 10));
+        }
+    </script>
+</body>
+
+</html>
