@@ -1,0 +1,65 @@
+\def\inputNum{-20220520}
+\toks0{(11/(45-1) \times 4)}
+\toks1{(-11+4-5+14)}
+\toks2{(-11-4+5+14)}
+\toks3{(11-4-5+14)}
+\toks4{((114-51) \times 4+(-11-4+5+14))}
+\toks5{(114 \times 514+(11 \times 45 \times 14+(-11/4+51/4)))}
+\count0=\inputNum\relax
+\def\loop#1#2#3{
+    #3
+    \ifnum #1<#2
+        \advance#1 by 1
+        \loop{#1}{#2}{#3}
+    \fi
+}
+\def\homoBinary#1{
+    \ifnum #1=0
+        \the\toks0
+    \else
+        \count4=#1
+        \count5=1
+        \count6=0
+        \loop{\count5}{6}{
+            \ifodd\count4
+                \ifnum\count6=1
+                    \times
+                \fi
+                \count6=1
+                \the\toks\count5
+            \fi
+            \divide\count4 by 2
+        }
+    \fi
+}
+\def\homo#1{
+    \ifnum #1=0
+        (1-1) \times 4514
+    \else
+        \ifnum #1>0
+            \count1=\the#1
+            \count2=0
+            \count3=0
+            \loop{\count2}{32}{
+                \ifodd\count1
+                    \ifnum\count3=1
+                        +
+                    \fi
+                    \count3=1
+                    \homoBinary{\count2}
+                \fi
+                \divide\count1 by 2
+            }
+        \else
+            \count1=0
+            \advance\count1 by -\count0
+            \count0=\count1
+            (11-4-5+1-4) \times (\homo{#1})
+        \fi
+    \fi
+}
+Ok, You input $\the\count0$.
+
+Obviously, $\the\count0 = \homo{\count0}$
+
+\bye
